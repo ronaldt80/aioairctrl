@@ -29,7 +29,7 @@ do
   aioairctrl -H $ipAddrBase$i status-observe -J >> $pathToRamdisk$i.txt &
   lineCount[${i}]=$(cat $pathToRamdisk$i.txt | wc -l)
   repeat[${i}]=0
-  if [ ${lineCount[$i]} == "0" ] # force a change on the device so it will send an update
+  if [ ${lineCount[$i]} == "0" ] # force a change on the device so it has a reason to send a new message
   then
     aioairctrl -H $ipAddrBase$i set om=t
     sleep 1

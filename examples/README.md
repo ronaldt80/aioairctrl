@@ -1,6 +1,7 @@
-The __bash__ examples were only tested on a raspberry pi running __Raspbian 10 (buster)__ in combination with __Philips AC2889/10__ SWVersion`1.0.7` WifiVersion`AWS_Philips_AIR@64.3`.
+# Disclaimer
+The __bash__ examples are neither eficcient nor elegant or best practice, __use them at your own risk__. They were only tested on a raspberry pi running __Raspbian 10 (buster)__ in combination with __Philips AC2889/10__ SWVersion`1.0.7` WifiVersion`AWS_Philips_AIR@64.3`.
 
-### Instructions
+# Instructions
 You need `jq`
 ```bash
 sudo apt install jq

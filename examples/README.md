@@ -5,15 +5,15 @@ You need `jq`
 ```bash
 sudo apt install jq
 ```
-and __you have to modify the first few lines__ in `master-slave-aioairctrl.sh`.
+and __you have to modify the first few lines__ in `master-slave.sh`.
 
 In the sudo crontab `sudo crontab -e` add
 ```bash
-@reboot sleep 10; /home/pi/ramdisk-aioairctrl.sh
+@reboot sleep 10; /home/pi/ramdisk.sh
 ```
 In the user crontab `crontab -e` add
 ```bash
-@reboot sleep 30; /home/pi/master-slave-aioairctrl.sh >> /ramdisk/aioairctrl/status.txt 2>&1
+@reboot sleep 30; /home/pi/master-slave.sh >> /ramdisk/aioairctrl/status.txt 2>&1
 ```
 You could view the output (with coloring from grep) using
 ```bash

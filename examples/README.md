@@ -6,7 +6,7 @@ You need `jq`
 ```bash
 sudo apt install jq
 ```
-and __you have to modify the first few lines__ in `master-slave.sh`. This script will bug a little till it got the first update from all devices. This will not happen unless something changes, like measured PM 2.5 or speed. The easiest way to force this update is to change the speed of the master device, wait 10 seconds and then change the master back to the original setting. This will force all other devices to change their speed too. 
+and __you have to modify the first few lines__ in `master-slave.sh`. 
 
 In the sudo crontab `sudo crontab -e` add
 ```bash

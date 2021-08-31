@@ -20,8 +20,7 @@ trap stopeverything SIGINT
 stopeverything(){
   iReadTheWarning=false
   killall aioairctrl
-  echo ""
-  echo "bye bye"
+  if $print ; then echo "";  echo "bye bye"; fi
 }
 killall aioairctrl
 noHuman=0
@@ -73,7 +72,7 @@ do
   do
     if [ $(cat $j | wc -l) -gt 1000 ]
     then
-      echo "$j"
+      if $print ; then echo "$j"; fi
       tail -n 10 $j > $j.backup
       cat $j.backup > $j
       rm $j.backup
@@ -99,7 +98,7 @@ do
     #if in auto mode and pm25 is really high -> use turbo
     if [ "${devicePm[$master]}" -gt $autoTurboOnAbove ] && [ "${deviceMode[$master]}" == "P" ]
     then
-      echo "turbo"
+      if $print ; then echo "turbo"; fi
       aioairctrl -H $ipAddrBase$master set om=t
       noHuman=1
       deviceOm[${master}]="t"
@@ -107,7 +106,7 @@ do
     # in case of auto turbo (see above) go back to normal if pm25 low enough but only if turbo was not invoked by human
     if [ "${devicePm[$master]}" -lt $autoTurboOffBelow ] && [ "${deviceMode[$master]}" == "M" ] && [ "$noHuman" == "1" ]
     then
-      echo "auto"
+      if $print ; then echo "auto"; fi
       aioairctrl -H $ipAddrBase$master set mode=P
       noHuman=0
       deviceOm[${master}]="2"

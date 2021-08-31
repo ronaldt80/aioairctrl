@@ -1,12 +1,21 @@
-The *.sh examples were only tested on a raspberry pi running Raspbian 10 (buster).
-You need "jq"
+The __bash__ examples were only tested on a raspberry pi running __Raspbian 10 (buster)__ in combination with __Philips AC2889/10__ SWVersion`1.0.7` WifiVersion`AWS_Philips_AIR@64.3`.
+
+### Instructions
+You need `jq`
+```bash
 sudo apt install jq
+```
+and __you have to modify the first few lines__ in `master-slave-aioairctrl.sh`.
 
-In the sudo crontab (sudo crontab -e) add
-@reboot sleep 10; /home/pi/mount-ramdisk.sh
-
-In the user crontab (crontab -e) add
-@reboot sleep 30; /home/pi/luft-aio.sh >> /ramdisk/aioairctrl/status.txt 2>&1
-
+In the sudo crontab `sudo crontab -e` add
+```bash
+@reboot sleep 10; /home/pi/ramdisk-aioairctrl.sh
+```
+In the user crontab `crontab -e` add
+```bash
+@reboot sleep 30; /home/pi/master-slave-aioairctrl.sh >> /ramdisk/aioairctrl/status.txt 2>&1
+```
 You could view the output (with coloring from grep) using
+```bash
 tail -f /ramdisk/aioairctrl/status.txt | grep -E 'PM.*|*'
+```

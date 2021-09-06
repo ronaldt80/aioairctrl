@@ -31,7 +31,7 @@ do
   repeat[${i}]=0
   if [ ${lineCount[$i]} == "0" ] # force a change on the device so it has a reason to send a new message
   then
-    timoute 60 aioairctrl -H $ipAddrBase$i set om=t
+    timeout 60 aioairctrl -H $ipAddrBase$i set om=t
     sleep 1
     timeout 60 aioairctrl -H $ipAddrBase$i set mode=P
   fi

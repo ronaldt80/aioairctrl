@@ -3,16 +3,16 @@ export PATH="$PATH:/home/pi/.local/bin" # you likely have to modify this path, m
 
 ### edit these lines from here ###
 pathToRamdisk="/ramdisk/aioairctrl/"  # if you already use this path, this script will cause havoc!
-                                      # this script will happily delete or modify anything in this path
+          # this script will happily delete or modify anything in this path
 iReadTheWarning=false    # change this to true after reading the warning
 ipAddrBase="192.168.6."
-master=150  #last ipv4 block of master device
+master=151  #last ipv4 block of master device
 sleepTime=10
 print=true
 ipAddrRange="$(echo {150..152})"  #last ipv4 block of all devices including master
 autoTurbo=true
-autoTurboOnAbove=80  #input is PM 2.5 value
-autoTurboOffBelow=40  #input is PM 2.5 value
+autoTurboOnAbove=100  #input is PM 2.5 value
+autoTurboOffBelow=50  #input is PM 2.5 value
 ccn=5    # charCountName, how many chars does your device names have? (table spacing) do not go below 3
 ### to here ###
 
@@ -20,7 +20,8 @@ trap stopeverything SIGINT
 stopeverything(){
   iReadTheWarning=false
   killall aioairctrl
-  if $print ; then echo "";  echo "bye bye"; fi
+  echo ""
+  echo "bye bye"
 }
 killall aioairctrl
 noHuman=0
@@ -29,11 +30,11 @@ do
   aioairctrl -H $ipAddrBase$i status-observe -J >> $pathToRamdisk$i.txt &
   lineCount[${i}]=$(cat $pathToRamdisk$i.txt | wc -l)
   repeat[${i}]=0
-  if [ ${lineCount[$i]} == "0" ] # force a change on the device so it has a reason to send a new message
+  if [ ${lineCount[$i]} == "0" ] # force a change on the device so it will send an update
   then
-    aioairctrl -H $ipAddrBase$i set om=t
+    timoute 60 aioairctrl -H $ipAddrBase$i set om=t
     sleep 1
-    aioairctrl -H $ipAddrBase$i set mode=P
+    timeout 60 aioairctrl -H $ipAddrBase$i set mode=P
   fi
 done
 
@@ -115,7 +116,13 @@ do
   # master-slave-function
   for i in $ipAddrRange
   do
-    if [ "${devicePwr[$i]}" != "${devicePwr[$master]}" ]; then aioairctrl -H $ipAddrBase$i set pwr="${devicePwr[$master]}"; if $print ; then echo $i" pwr"; fi; fi
-    if [ "${deviceOm[$i]}" != "${deviceOm[$master]}" ]; then aioairctrl -H $ipAddrBase$i set om="${deviceOm[$master]}"; if $print ; then echo $i" om"; fi; fi
+    if [ "${devicePwr[$i]}" != "${devicePwr[$master]}" ]; then
+      timeout 9 aioairctrl -H $ipAddrBase$i set pwr="${devicePwr[$master]}" &
+      if $print ; then echo $i" pwr"; fi
+    fi
+    if [ "${deviceOm[$i]}" != "${deviceOm[$master]}" ]; then
+      timeout 9 aioairctrl -H $ipAddrBase$i set om="${deviceOm[$master]}" &
+      if $print ; then echo $i" om"; fi
+    fi
   done
 done

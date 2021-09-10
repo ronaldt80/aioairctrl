@@ -8,6 +8,7 @@ iReadTheWarning=false    # change this to true after reading the warning
 ipAddrBase="192.168.6."
 master=151  #last ipv4 block of master device
 sleepTime=10
+assumeStuck=30 # watchdog will kill and restart status-observer after this many loops without new data from air purifyer
 print=true
 ipAddrRange="$(echo {150..152})"  #last ipv4 block of all devices including master
 autoTurbo=true
@@ -51,8 +52,8 @@ do
     else
       repeat[${i}]=0
     fi
-    #observer not working? restart if 30 loops without update
-    if [ ${repeat[$i]} -gt 30 ]
+    #observer not working? restart if $assumeStuck loops without update
+    if [ ${repeat[$i]} -gt $assumeStuck ]
     then
       kill $(ps -aux | grep -i aioairctrl | grep -i $ipAddrBase$i | awk '//{print $2}')
       aioairctrl -H $ipAddrBase$i status-observe -J >> $pathToRamdisk$i.txt &
